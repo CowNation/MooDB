@@ -97,3 +97,7 @@ class Database{
     throw "Could not find table '" + TableName + "'";
   }
 };
+
+void Table::RefreshFile(){
+  parentDB->SaveData();
+}
