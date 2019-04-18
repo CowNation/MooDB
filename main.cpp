@@ -13,10 +13,6 @@ void PrintVector(std::vector< T > vec){
   }
 }
 
-void Table::RefreshFile(){
-  parentDB->SaveData();
-}
-
 int main() {
   Database db("test.txt");
   Table tab("Patients", {"Name", "Gender", "Age", "DOB", "Height", "Weight"});
