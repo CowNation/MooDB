@@ -1,3 +1,27 @@
+////////////////////////////////////////////////////////////
+//
+// cpp-CowConfig
+// Copyright (C) 2018 CowCorp
+//
+// This software is provided 'as-is', without any express or implied warranty.
+// In no event will the author be held liable for any damages arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it freely,
+// subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented;
+//    you must not claim that you wrote the original software.
+//    If you use this software in a product, an acknowledgment
+//    in the product documentation would be appreciated but is not required.
+//
+// 2. Altered source versions must be plainly marked as such,
+//    and must not be misrepresented as being the original software.
+//
+// 3. This notice may not be removed or altered from any source distribution.
+//
+////////////////////////////////////////////////////////////
+
 #ifndef cppCowConfig
 #define cppCowConfig
 
@@ -46,6 +70,11 @@ private:
     return -1;
   }
   ///////////////////
+	int Read(std::string Section, std::string offsetText){
+		if (FirstRead)
+      ReadAllLines();
+    return FindElement(Section, offsetText);
+	}
 public:
 	CowConfig() {}
 	CowConfig(std::string fileName){
@@ -58,12 +87,6 @@ public:
 			WriteConfig.close();
 	}
 	///////////////////
-  std::vector< std::string >GetLines(){
-    if (FirstRead)
-      ReadAllLines();
-    return Lines;
-  }
-  ///////////////////
 	bool OpenFile(std::string fileName) {
 		FileName = fileName;
 
@@ -71,7 +94,15 @@ public:
 		return (ReadConfig.is_open());
 	} // Will open file with specified filename and will return whether the file is open
 	//////////////////
-	void WriteLine(std::string offsetText, char* valToWrite) {
+	std::vector< std::string > GetLines(){
+		std::string str;
+		std::vector< std::string > ret;
+    while (std::getline(ReadConfig, str))
+      ret.push_back(str);
+		return ret;
+	}
+	//////////////////
+	void WriteLine(std::string offsetText, std::string valToWrite) {
 		if (ReadConfig.is_open())
 			ReadConfig.close(); //Close fstream file before writing to the file
 
@@ -94,7 +125,7 @@ public:
 			FirstLine = false;
 		}
 
-		WriteConfig << offsetText << valToWrite << std::endl;
+		WriteConfig << offsetText << std::to_string(valToWrite) << std::endl;
 
 		ReadConfig.open(FileName);
 	}
@@ -104,14 +135,12 @@ public:
   }
 	//////////////////
 	int iRead(std::string Section, std::string offsetText) {
-    if (FirstRead)
-      ReadAllLines();
-    int LineFound = FindElement(Section, offsetText);
-    if (LineFound == -1)
+		int _Read = Read(Section, offsetText);
+    if (_Read == -1)
       return 0;
     else{
       try{
-        std::string temp = Lines[LineFound];
+        std::string temp = Lines[_Read];
         RemoveSubStr(offsetText, temp);
         return stoi(temp);
       }
@@ -121,15 +150,12 @@ public:
     }
 	}
 	float fRead(std::string Section, std::string offsetText) {
-    if (FirstRead)
-      ReadAllLines();
-
-    int LineFound = FindElement(Section, offsetText);
-    if (LineFound == -1)
+		int _Read = Read(Section, offsetText);
+    if (_Read == -1)
       return 0.0f;
     else{
       try{
-        std::string temp = Lines[LineFound];
+        std::string temp = Lines[_Read];
         RemoveSubStr(offsetText, temp);
         return stof(temp);
       }
@@ -139,15 +165,12 @@ public:
     }
 	}
 	std::string sRead(std::string Section, std::string offsetText) {
-    if (FirstRead)
-      ReadAllLines();
-
-    int LineFound = FindElement(Section, offsetText);
-    if (LineFound == -1)
+		int _Read = Read(Section, offsetText);
+    if (_Read == -1)
       return "";
     else{
       try{
-        std::string temp = Lines[LineFound];
+        std::string temp = Lines[_Read];
         RemoveSubStr(offsetText, temp);
         return temp;
       }
@@ -157,15 +180,12 @@ public:
     }
 	}
 	bool bRead(std::string Section, std::string offsetText) {
-    if (FirstRead)
-      ReadAllLines();
-
-    int LineFound = FindElement(Section, offsetText);
-    if (LineFound == -1)
+		int _Read = Read(Section, offsetText);
+    if (_Read == -1)
       return false;
     else{
       try{
-        std::string temp = Lines[LineFound];
+        std::string temp = Lines[_Read];
         RemoveSubStr(offsetText, temp);
         return temp == "1";
       }
