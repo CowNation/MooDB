@@ -36,7 +36,7 @@ class Database{
       }
     }
     if (ret.size() == 0)
-      return {"he1", "He2", "he3", "he4"};
+      return {};
     return ret;
   }
   CowConfig cfg;
