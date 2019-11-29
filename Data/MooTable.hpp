@@ -9,7 +9,7 @@ class Table
 
 private:
 
-    static bool StringVectorHas( std::vector <std::string> vec, std::string substr )
+    static bool StringVectorHas( std::vector <std::string> &vec, std::string substr )
     {
         for (std::string & i : vec)
         {
@@ -54,7 +54,7 @@ public:
             ColumnOffsets.push_back( -1 );
         }
 
-        for (auto & i : Data)
+        for (std::vector <std::string> & i : Data)
         {
             for ( int j = 0; j < i.size( ); j++ )
             {
@@ -102,7 +102,7 @@ public:
 
         std::cout << Seperator << "\n" << Headers << "\n" << Seperator;
 
-        for (auto & i : Data)
+        for (std::vector <std::string> & i : Data)
         {
             std::cout << "\n| ";
             for ( int j = 0; j < i.size( ); j++ )

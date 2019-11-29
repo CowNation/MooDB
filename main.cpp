@@ -33,9 +33,10 @@ int main( )
     db.SaveData( );
 
     std::vector <std::vector <std::string> > r = hp.GetRowsWithValue( "RequiresID", "True" );
-    for ( int i = 0; i < r.size( ); i++ )
+
+    for (const std::vector <std::string> & i : r)
     {
-        PrintVector( r[ i ] );
+        PrintVector( i );
         std::cout << std::endl;
     }
 
