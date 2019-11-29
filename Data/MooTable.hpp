@@ -9,9 +9,9 @@ class Table
 
 private:
 
-    static bool StringVectorHas( std::vector <std::string> &vec, std::string substr )
+    static bool StringVectorHas( const std::vector <std::string> &vec, const std::string &substr )
     {
-        for (std::string & i : vec)
+        for ( const std::string &i : vec )
         {
             if ( i.find( substr ) != std::string::npos )
             {
