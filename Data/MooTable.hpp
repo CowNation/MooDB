@@ -6,20 +6,24 @@ class Database;
 
 class Table
 {
+
 private:
-    bool StringVectorHas( std::vector <std::string> vec, std::string substr )
+
+    static bool StringVectorHas( std::vector <std::string> vec, std::string substr )
     {
-        for ( int i = 0; i < vec.size( ); i++ )
+        for (std::string & i : vec)
         {
-            if ( vec[ i ].find( substr ) != std::string::npos )
+            if ( i.find( substr ) != std::string::npos )
             {
                 return true;
             }
         }
+
         return false;
     }
 
 public:
+
     std::vector <std::string> Columns; // A horizonal vector containing the number of columns and their names
     std::vector <std::vector <std::string> > Data; // A vertical vector (list) of horizontal vectors containing string data
 
@@ -50,14 +54,14 @@ public:
             ColumnOffsets.push_back( -1 );
         }
 
-        for ( int i = 0; i < Data.size( ); i++ )
+        for (auto & i : Data)
         {
-            for ( int j = 0; j < Data[ i ].size( ); j++ )
+            for ( int j = 0; j < i.size( ); j++ )
             {
-                if (( Data[ i ][ j ].length( ) - Columns[ j ].length( ) > ColumnOffsets[ j ] ||
-                      ColumnOffsets[ j ] == -1 ) && Data[ i ][ j ].length( ) > Columns[ j ].length( ))
+                if (( i[ j ].length( ) - Columns[ j ].length( ) > ColumnOffsets[ j ] ||
+                      ColumnOffsets[ j ] == -1 ) && i[ j ].length( ) > Columns[ j ].length( ))
                 {
-                    ColumnOffsets[ j ] = Data[ i ][ j ].length( ) - Columns[ j ].length( );
+                    ColumnOffsets[ j ] = i[ j ].length( ) - Columns[ j ].length( );
                 }
             } // we are looping horizontally
         } // we are looping vertically
@@ -98,19 +102,19 @@ public:
 
         std::cout << Seperator << "\n" << Headers << "\n" << Seperator;
 
-        for ( int i = 0; i < Data.size( ); i++ )
+        for (auto & i : Data)
         {
             std::cout << "\n| ";
-            for ( int j = 0; j < Data[ i ].size( ); j++ )
+            for ( int j = 0; j < i.size( ); j++ )
             {
-                std::cout << Data[ i ][ j ];
+                std::cout << i[ j ];
 
                 if ( ColumnOffsets[ j ] != -1 )
                 {
-                    if ( Data[ i ][ j ].length( ) < ( ColumnOffsets[ j ] + Columns[ j ].length( )))
+                    if ( i[ j ].length( ) < ( ColumnOffsets[ j ] + Columns[ j ].length( )))
                     {
                         for ( int p = 0;
-                              p < ( ColumnOffsets[ j ] + Columns[ j ].length( )) - Data[ i ][ j ].length( ); p++ )
+                              p < ( ColumnOffsets[ j ] + Columns[ j ].length( )) - i[ j ].length( ); p++ )
                         {
                             std::cout << " ";
                         }
@@ -118,7 +122,7 @@ public:
                 }
                 else
                 {
-                    for ( int p = 0; p < Columns[ j ].length( ) - Data[ i ][ j ].length( ); p++ )
+                    for ( int p = 0; p < Columns[ j ].length( ) - i[ j ].length( ); p++ )
                     {
                         std::cout << " ";
                     }
@@ -178,9 +182,9 @@ public:
             throw "Could not find column '" + ColumnName + "'";
         }
 
-        for ( int i = 0; i < Data.size( ); i++ )
+        for (auto & i : Data)
         {
-            ret.push_back( Data[ i ][ ColumnIndex ] );
+            ret.push_back( i[ ColumnIndex ] );
         }
 
         return ret;

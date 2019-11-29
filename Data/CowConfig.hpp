@@ -59,6 +59,7 @@
 class CowConfig
 {
 private:
+
     std::ofstream WriteConfig;
     std::fstream ReadConfig;
     bool FirstLine = true, FirstRead = true;
@@ -66,7 +67,7 @@ private:
     std::vector <std::string> Lines;
 
     ///////////////////
-    void RemoveSubStr( std::string substr, std::string &str )
+    static void RemoveSubStr( std::string substr, std::string &str )
     {
         size_t pos = std::string::npos;
 
@@ -121,10 +122,10 @@ private:
     }
 
 public:
-    CowConfig( )
-    { }
 
-    CowConfig( std::string fileName )
+    CowConfig( ) = default;
+
+    explicit CowConfig( std::string fileName )
     {
         OpenFile( fileName );
     }
