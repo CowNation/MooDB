@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "Data/MooDatabase.hpp"
+#include "MooDb/MooDb.hpp"
 
 template <class T>
 void PrintVector(std::vector< T > vec){
@@ -14,18 +14,18 @@ void PrintVector(std::vector< T > vec){
 }
 
 int main() {
-	Database db("test.txt");
-	Table tab("Patients", {"Name", "Gender", "Age", "DOB", "Height", "Weight"});
+	Table tab({"Name", "Gender", "Age", "DOB", "Height", "Weight"});
 	tab.Insert({"Funanya Radomir", "Female", "3", "6/1/2015", "3 ft 1 in", "29.5 lbs"});
 	tab.Insert({"Reanna Shekhar", "Female", "15", "10/31/2003", "5 ft 6 in", "130 lbs"});
-	db.InsertTable(tab);
-	Table hp("Medications", {"Name", "Stock", "RequiresID"});
+	tab.Print();
+	tab.Save("Patients.csv");
+
+	Table hp({"Name", "Stock", "RequiresID"});
 	hp.Insert({"Ibuprofin", "423,243", "False"});
 	hp.Insert({"Psuedophedrine", "345,223", "True"});
 	hp.Insert({"Tylenol", "452,334", "False"});
-	db.InsertTable(hp);
-	db.Print();
-	db.SaveData();
+	hp.Print();
+	hp.Save("Medications.csv");
 
 	std::vector< std::vector < std::string > > r = hp.GetRowsWithValue("RequiresID", "True");
 	for (int i = 0; i < r.size(); i++){
@@ -33,10 +33,7 @@ int main() {
 		std::cout << std::endl;
 	}
 
-	Database datab("test.txt");
-	datab.LoadTables();
-
-	Table tb = datab.GetTable("Patients");
+	Table tb = Table::Load("Patients.csv");
 	tb.Print();
 	PrintVector(tb.GetColumn("Name"));
 	PrintVector(tb.GetRow(0));

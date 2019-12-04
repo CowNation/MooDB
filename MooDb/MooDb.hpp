@@ -1,32 +1,47 @@
 #include <iostream>
 #include <vector>
 #include <string>
-
-class Database;
+#include "CowConfig.hpp"
 
 class Table{
 private:
+	static std::vector< std::string > SplitCSV(std::string str){
+		std::string built = "";
+		std::vector< std::string > ret = std::vector< std::string >();
+		bool betweenQuotes = false;
+		for (int i = 0; i < str.length(); i++){
+			if (str[i] == '\"')
+				betweenQuotes = !betweenQuotes;
+
+			if (str[i] == ',' && !betweenQuotes){
+				if (i == 0)
+					continue;
+
+				ret.push_back(built);
+				built = "";
+			}
+			else
+				built += str[i];
+		}
+		return ret;
+	}
+	
 	bool StringVectorHas(std::vector< std::string > vec, std::string substr){
-	for (int i = 0; i < vec.size(); i++)
-	if (vec[i].find(substr) != std::string::npos)
-	return true;
-	return false;
+		for (int i = 0; i < vec.size(); i++)
+			if (vec[i].find(substr) != std::string::npos)
+				return true;
+		return false;
 	}
 public:
-	std::vector< std::string > Columns; // A horizonal vector containing the number of columns and their names
+	std::vector< std::string > Columns; // A horizonal vector containing the column's names
 	std::vector< std::vector< std::string > > Data; // A vertical vector (list) of horizontal vectors containing string data
-
-	Database* parentDB = nullptr;
-	std::string Name;
 
 	void RefreshFile();
 
 	void Insert(std::vector< std::string > data) {
-	if (data.size() != Columns.size())
-	throw "Inserted data does not match columns";
-	if (StringVectorHas(data, "{") || StringVectorHas(data, "}") || StringVectorHas(data, ""))
-	throw "Inserted data contains a forbidden character";
-	Data.push_back(data);
+		if (data.size() != Columns.size())
+			throw "Inserted data does not match columns";
+		Data.push_back(data);
 	}
 
 	void Print(){
@@ -41,8 +56,6 @@ public:
 					ColumnOffsets[j] = Data[i][j].length() - Columns[j].length();
 			} // we are looping horizontally
 		} // we are looping vertically
-
-		std::cout << std::endl << Name << ":" << std::endl;
 
 		std::string Headers;
 		std::string Seperator;
@@ -77,7 +90,7 @@ public:
 				if (ColumnOffsets[j] != -1){
 					if (Data[i][j].length() < (ColumnOffsets[j] + Columns[j].length())){
 						for (int p = 0; p < (ColumnOffsets[j] + Columns[j].length()) - Data[i][j].length(); p++)
-						std::cout << " ";
+							std::cout << " ";
 					}
 				}
 				else{
@@ -92,8 +105,40 @@ public:
 		std::cout << std::endl << Seperator << std::endl;
 	}
 
-	Table(std::string tableName, std::vector < std::string > columns){
-		Name = tableName;
+	void Save(std::string fileName){
+		CowConfig cfg(fileName);
+		std::string tableColumns = "";
+		for (int p = 0; p < Columns.size(); p++)
+			tableColumns += Columns[p] + ",";
+		cfg.WriteLine("", tableColumns);
+
+		for (int p = 0; p < Data.size(); p++){
+			std::string rowData = "";
+			for (int q = 0; q < Data[p].size(); q++){
+				if (Data[p][q].find(",") != std::string::npos)
+					rowData += "\"" + Data[p][q] + "\",";
+				else
+					rowData += Data[p][q] + ",";
+			} // looping horizontally
+			cfg.WriteLine("", rowData);
+		} // looping vertically
+	}
+
+	static Table Load(std::string fileName){
+		CowConfig cfg(fileName);
+		std::vector< std::string > Lines = cfg.GetLines();
+		Table ret;
+		for (int i = 0; i < Lines.size(); i++){
+			if (i == 0)
+				ret = Table(SplitCSV(Lines[i])); // first line is columns
+			else
+				ret.Data.push_back(SplitCSV(Lines[i]));
+		}
+		return ret;
+	}
+
+	Table(){}
+	Table(std::vector < std::string > columns){
 		Columns = columns;
 	}
 
