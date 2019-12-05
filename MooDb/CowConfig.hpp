@@ -65,16 +65,16 @@ private:
 	std::vector< std::string >Lines;
   	///////////////////
   	void RemoveSubStr(std::string substr, std::string& str){
-    	size_t pos = std::string::npos;
+    		size_t pos = std::string::npos;
 		
 		while ((pos = str.find(substr)) != std::string::npos)
 			str.erase(pos, substr.length());
   	}
   	///////////////////
   	void ReadAllLines(){
-    	std::string str;
-    	while (std::getline(ReadConfig, str))
-      		Lines.push_back(str);
+    		std::string str;
+    		while (std::getline(ReadConfig, str))
+      			Lines.push_back(str);
   	}
   	///////////////////
   	int FindElement(std::string Section, std::string offsetText){
@@ -93,13 +93,13 @@ private:
   	///////////////////
 	int pRead(std::string Section, std::string offsetText){
 		if (FirstRead)
-      		ReadAllLines();
-    	return FindElement(Section, offsetText);
+      			ReadAllLines();
+    		return FindElement(Section, offsetText);
 	}
 public:
 	CowConfig() {}
 	CowConfig(std::string fileName){
-    	OpenFile(fileName);
+    		OpenFile(fileName);
 	}
 	~CowConfig() {
 		if (ReadConfig.is_open())
@@ -118,8 +118,8 @@ public:
 	std::vector< std::string > GetLines(){
 		std::string str;
 		std::vector< std::string > ret;
-    	while (std::getline(ReadConfig, str))
-      		ret.push_back(str);
+    		while (std::getline(ReadConfig, str))
+      			ret.push_back(str);
 		return ret;
 	}
 	//////////////////
@@ -152,7 +152,7 @@ public:
 	}
   	void Section(std::string SectionText) {
 		SectionText = "[" + SectionText + "]";
-    	WriteLine("", SectionText);
+    		WriteLine("", SectionText);
   	}
 	//////////////////
 	template <class T>
@@ -164,9 +164,9 @@ public:
       			try{
         			std::string temp = Lines[_Read];
         			RemoveSubStr(offsetText, temp);
-					T ret;
-					std::istringstream(temp) >> ret;
-					return ret;
+				T ret;
+				std::istringstream(temp) >> ret;
+				return ret;
       			}
       			catch (...){
         			return T();
