@@ -13,6 +13,16 @@ void PrintVector(std::vector< T > vec){
 	}
 }
 
+template <class T>
+void PrintVector(std::vector< T* > vec){
+	std::cout << std::endl;
+	for (int i = 0; i < vec.size(); i++){
+		std::cout << *vec[i];
+		if (i != vec.size() - 1)
+			std::cout << ", ";
+	}
+}
+
 int main() {
 	Table tab({"Name", "Gender", "Age", "DOB", "Height", "Weight"});
 	tab.Insert({"Funanya Radomir", "Female", "3", "6/1/2015", "3 ft 1 in", "29.5 lbs"});
@@ -27,14 +37,16 @@ int main() {
 	hp.Print();
 	hp.Save("Medications.csv");
 
-	std::vector< std::vector < std::string > > r = hp.GetRowsWithValue("RequiresID", "True");
+	std::vector< std::vector < std::string >* > r = hp.GetRowsWithValue("RequiresID", "True");
 	for (int i = 0; i < r.size(); i++){
-		PrintVector(r[i]);
+		PrintVector(*r[i]);
 		std::cout << std::endl;
 	}
 
 	Table tb = Table::Load("Patients.csv");
 	tb.Print();
-	PrintVector(tb.GetColumn("Name"));
-	PrintVector(tb.GetRow(0));
+	*tb.GetColumn("Name").at(1) = "REDACTED";
+	PrintVector<std::string>(tb.GetColumn("Name"));
+	tb.GetRow(0)->at(0) = "REDACTED"; // sets the first value in the first row
+	PrintVector(*tb.GetRow(0));
 }
