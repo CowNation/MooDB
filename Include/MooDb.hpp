@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <functional>
 #include <string>
 #include "CowConfig.hpp"
 
@@ -142,24 +143,24 @@ public:
 		Columns = columns;
 	}
 
-	std::vector< std::string > GetRow(int Index){
+	std::vector< std::string >* GetRow(int Index){
 		if (Index > Data.size() || Index < 0)
 			throw "Row at index " + std::to_string(Index) + " is out of bounds";
-		return Data[Index];
+		return &Data[Index];
 	}
 
-	std::vector< std::vector < std::string > > GetRowsWithValue(std::string nColumn, std::string ColumnValue){
-		std::vector< std::vector < std::string > > ret;
-		std::vector< std::string > vColumn = GetColumn(nColumn);
+	std::vector< std::vector < std::string >* > GetRowsWithValue(std::string nColumn, std::string ColumnValue){
+		std::vector< std::vector < std::string >* > ret;
+		std::vector< std::string* > vColumn = GetColumn(nColumn);
 		for (int i = 0; i < vColumn.size(); i++){
-			if (vColumn[i] == ColumnValue)
+			if (*vColumn[i] == ColumnValue)
 				ret.push_back(GetRow(i));
 		}
 		return ret;
 	} // will return a vector of vectors of strings where that row's column value equals the 'ColumnValue'
 
-	std::vector< std::string > GetColumn(std::string ColumnName){
-		std::vector< std::string > ret;
+	std::vector< std::string* > GetColumn(std::string ColumnName){
+		std::vector< std::string* > ret;
 		int ColumnIndex = -1;
 		for (int i = 0; i < Columns.size(); i++){
 			if (Columns[i] == ColumnName){
@@ -172,7 +173,7 @@ public:
 			throw "Could not find column '" + ColumnName + "'";
 		
 		for (int i = 0; i < Data.size(); i++)
-			ret.push_back(Data[i][ColumnIndex]);
+			ret.push_back(&Data[i][ColumnIndex]);
 
 		return ret;
 	}
