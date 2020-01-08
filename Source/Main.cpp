@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "MooDb.hpp"
+#include "../Include/MooDb.hpp"
 
 template <class T>
 void PrintVector(std::vector< T > vec){
