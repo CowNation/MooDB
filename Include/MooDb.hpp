@@ -45,9 +45,9 @@ private:
 
 	bool StringVectorHas(std::vector <std::string> vec, std::string substr)
 	{
-		for (int i = 0; i < vec.size(); i++)
+		for (auto& i : vec)
 		{
-			if (vec[i].find(substr) != std::string::npos)
+			if (i.find(substr) != std::string::npos)
 				return true;
 		}
 		return false;
@@ -73,13 +73,13 @@ public:
 			ColumnOffsets.push_back(-1);
 		}
 
-		for (int i = 0; i < Data.size(); i++)
+		for (auto& i : Data)
 		{
-			for (int j = 0; j < Data[i].size(); j++)
+			for (int j = 0; j < i.size(); j++)
 			{
-				if ((Data[i][j].length() - Columns[j].length() > ColumnOffsets[j] || ColumnOffsets[j] == -1) &&
-					Data[i][j].length() > Columns[j].length())
-					ColumnOffsets[j] = Data[i][j].length() - Columns[j].length();
+				if ((i[j].length() - Columns[j].length() > ColumnOffsets[j] || ColumnOffsets[j] == -1) &&
+					i[j].length() > Columns[j].length())
+					ColumnOffsets[j] = i[j].length() - Columns[j].length();
 			} // we are looping horizontally
 		} // we are looping vertically
 
@@ -113,18 +113,18 @@ public:
 
 		std::cout << Seperator << "\n" << Headers << "\n" << Seperator;
 
-		for (int i = 0; i < Data.size(); i++)
+		for (auto& i : Data)
 		{
 			std::cout << "\n| ";
-			for (int j = 0; j < Data[i].size(); j++)
+			for (int j = 0; j < i.size(); j++)
 			{
-				std::cout << Data[i][j];
+				std::cout << i[j];
 
 				if (ColumnOffsets[j] != -1)
 				{
-					if (Data[i][j].length() < (ColumnOffsets[j] + Columns[j].length()))
+					if (i[j].length() < (ColumnOffsets[j] + Columns[j].length()))
 					{
-						for (int p = 0; p < (ColumnOffsets[j] + Columns[j].length()) - Data[i][j].length(); p++)
+						for (int p = 0; p < (ColumnOffsets[j] + Columns[j].length()) - i[j].length(); p++)
 						{
 							std::cout << " ";
 						}
@@ -132,7 +132,7 @@ public:
 				}
 				else
 				{
-					for (int p = 0; p < Columns[j].length() - Data[i][j].length(); p++)
+					for (int p = 0; p < Columns[j].length() - i[j].length(); p++)
 					{
 						std::cout << " ";
 					}
@@ -149,21 +149,21 @@ public:
 	{
 		CowConfig cfg(fileName);
 		std::string tableColumns = "";
-		for (int p = 0; p < Columns.size(); p++)
+		for (const auto& Column : Columns)
 		{
-			tableColumns += Columns[p] + ",";
+			tableColumns += Column + ",";
 		}
 		cfg.WriteLine("", tableColumns);
 
-		for (int p = 0; p < Data.size(); p++)
+		for (auto& p : Data)
 		{
 			std::string rowData = "";
-			for (int q = 0; q < Data[p].size(); q++)
+			for (int q = 0; q < p.size(); q++)
 			{
-				if (Data[p][q].find(",") != std::string::npos)
-					rowData += "\"" + Data[p][q] + "\",";
+				if (p[q].find(",") != std::string::npos)
+					rowData += "\"" + p[q] + "\",";
 				else
-					rowData += Data[p][q] + ",";
+					rowData += p[q] + ",";
 			} // looping horizontally
 			cfg.WriteLine("", rowData);
 		} // looping vertically
@@ -228,9 +228,9 @@ public:
 		if (ColumnIndex == -1)
 			throw "Could not find column '" + ColumnName + "'";
 
-		for (int i = 0; i < Data.size(); i++)
+		for (auto& i : Data)
 		{
-			ret.push_back(&Data[i][ColumnIndex]);
+			ret.push_back(&i[ColumnIndex]);
 		}
 
 		return ret;
