@@ -164,9 +164,20 @@ public:
 		} // looping vertically
 	}
 
-	static Table Load(std::string fileName)
+	static Table Load(std::string_view fileName)
 	{
-		CowConfig cfg(fileName);
+		CowConfig cfg;
+
+		try
+		{
+			cfg.OpenFile(fileName);
+		}
+		catch (MoonDB::Exception& exception)
+		{
+			exception.PrintMessage();
+			std::exit(1);
+		}
+
 		std::vector <std::string> Lines = cfg.GetLines();
 		Table ret;
 		for (int i = 0; i < Lines.size(); i++)

@@ -10,4 +10,4 @@ SET(CMAKE_CXX_FLAGS "--coverage")
 
 INCLUDE_DIRECTORIES(Include)
 
-ADD_EXECUTABLE(MoonDB Source/Main.cpp)
+ADD_EXECUTABLE(MoonDB Source/Main.cpp Include/Exception/Exception.hpp)

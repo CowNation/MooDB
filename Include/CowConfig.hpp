@@ -57,6 +57,8 @@
 #include <algorithm>
 #include <sstream>
 
+#include "Exception/Exception.hpp"
+
 class CowConfig
 {
 
@@ -136,11 +138,14 @@ public:
 	 * @param fileName Filename
 	 * @return True if the file is open, otherwise false.
 	 */
-	bool OpenFile(std::string_view fileName)
+	void OpenFile(std::string_view fileName)
 	{
 		ReadConfig.open(fileName.data());
 
-		return (ReadConfig.is_open());
+		if (not ReadConfig.is_open())
+		{
+			throw MoonDB::Exception("FileNotFoundException");
+		}
 	}
 
 
