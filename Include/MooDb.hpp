@@ -38,19 +38,7 @@ private:
 		return ret;
 	}
 
-	bool StringVectorHas(std::vector <std::string> vec, std::string substr)
-	{
-		for (auto& i : vec)
-		{
-			if (i.find(substr) != std::string::npos)
-				return true;
-		}
-		return false;
-	}
-
 public:
-
-	void RefreshFile();
 
 	void Insert(std::vector <std::string> data)
 	{
