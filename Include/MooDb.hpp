@@ -2,6 +2,7 @@
 #include <vector>
 #include <functional>
 #include <string>
+#include <string_view>
 #include "CowConfig.hpp"
 
 class Table
@@ -19,27 +20,20 @@ private:
 	 */
 	std::vector <std::vector <std::string> > Data;
 
-	static std::vector <std::string> SplitCSV(std::string str)
+	static std::vector <std::string> SplitCSV(std::string_view str)
 	{
 		std::string built;
+		std::vector <std::string> ret;
 
-		std::vector <std::string> ret = std::vector <std::string>();
-		bool betweenQuotes = false;
-		for (int i = 0; i < str.length(); i++)
+		for (char c : str)
 		{
-			if (str[i] == '\"')
-				betweenQuotes = !betweenQuotes;
-
-			if (str[i] == ',' && !betweenQuotes)
+			if (c == ',')
 			{
-				if (i == 0)
-					continue;
-
 				ret.push_back(built);
 				built = "";
 			}
 			else
-				built += str[i];
+				built += c;
 		}
 		return ret;
 	}
