@@ -6,7 +6,19 @@
 
 class Table
 {
+
 private:
+
+	/**
+	 * A horizonal vector containing the column's names
+	 */
+	std::vector <std::string> Columns;
+
+	/**
+	 * A vertical vector (list) of horizontal vectors containing string data
+	 */
+	std::vector <std::vector <std::string> > Data;
+
 	static std::vector <std::string> SplitCSV(std::string str)
 	{
 		std::string built = "";
@@ -42,8 +54,6 @@ private:
 	}
 
 public:
-	std::vector <std::string> Columns; // A horizonal vector containing the column's names
-	std::vector <std::vector <std::string> > Data; // A vertical vector (list) of horizontal vectors containing string data
 
 	void RefreshFile();
 
