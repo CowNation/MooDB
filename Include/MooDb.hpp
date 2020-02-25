@@ -140,26 +140,31 @@ public:
 		std::cout << std::endl << Seperator << std::endl;
 	}
 
-	void Save(std::string fileName)
+	void Save(const std::string&& fileName)
 	{
 		CowConfig cfg(fileName);
-		std::string tableColumns = "";
+
+		std::string tableColumns;
+
 		for (const auto& Column : Columns)
 		{
 			tableColumns += Column + ",";
 		}
+
 		cfg.WriteLine("", tableColumns);
 
 		for (auto& p : Data)
 		{
-			std::string rowData = "";
-			for (int q = 0; q < p.size(); q++)
+			std::string rowData;
+
+			for (auto& q : p)
 			{
-				if (p[q].find(",") != std::string::npos)
-					rowData += "\"" + p[q] + "\",";
+				if (q.find(',') != std::string::npos)
+					rowData += "\"" + q + "\",";
 				else
-					rowData += p[q] + ",";
+					rowData += q + ",";
 			} // looping horizontally
+
 			cfg.WriteLine("", rowData);
 		} // looping vertically
 	}

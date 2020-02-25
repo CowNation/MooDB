@@ -120,10 +120,10 @@ public:
 
 	CowConfig() = default;
 
-	explicit CowConfig(std::string_view fileName) : FileName(fileName)
+	explicit CowConfig(std::string_view fileName) noexcept : FileName(fileName)
 	{
-		OpenFile(fileName);
-	}
+
+	};
 
 	~CowConfig()
 	{
