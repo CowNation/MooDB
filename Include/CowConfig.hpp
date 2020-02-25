@@ -52,23 +52,26 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <string_view>
 #include <vector>
 #include <algorithm>
 #include <sstream>
 
 class CowConfig
 {
+
 private:
+
 	std::ofstream WriteConfig;
 	std::fstream ReadConfig;
 	bool FirstLine = true, FirstRead = true;
-	std::string FileName;
+	std::string_view FileName;
 	std::vector <std::string> Lines;
 
 	///////////////////
 	void RemoveSubStr(std::string substr, std::string& str)
 	{
-		size_t pos = std::string::npos;
+		size_t pos;
 
 		while ((pos = str.find(substr)) != std::string::npos)
 		{
@@ -112,11 +115,10 @@ private:
 	}
 
 public:
-	CowConfig()
-	{
-	}
 
-	CowConfig(std::string fileName)
+	CowConfig() = default;
+
+	explicit CowConfig(std::string_view fileName) : FileName(fileName)
 	{
 		OpenFile(fileName);
 	}
@@ -129,15 +131,19 @@ public:
 			WriteConfig.close();
 	}
 
-	///////////////////
-	bool OpenFile(std::string fileName)
+	/**
+	 * Will open file with specified filename and will return whether the file is open
+	 * @param fileName Filename
+	 * @return True if the file is open, otherwise false.
+	 */
+	bool OpenFile(std::string_view fileName)
 	{
-		FileName = fileName;
+		ReadConfig.open(fileName.data());
 
-		ReadConfig.open(fileName);
 		return (ReadConfig.is_open());
-	} // Will open file with specified filename and will return whether the file is open
-	//////////////////
+	}
+
+
 	std::vector <std::string> GetLines()
 	{
 		std::string str;
@@ -157,13 +163,13 @@ public:
 
 		if (FirstLine)
 		{
-			WriteConfig.open(FileName);
+			WriteConfig.open(FileName.data());
 			FirstLine = false;
 		}
 
 		WriteConfig << offsetText << valToWrite << std::endl;
 
-		ReadConfig.open(FileName);
+		ReadConfig.open(FileName.data());
 	}
 
 	template <class c>
@@ -174,13 +180,13 @@ public:
 
 		if (FirstLine)
 		{
-			WriteConfig.open(FileName);
+			WriteConfig.open(FileName.data());
 			FirstLine = false;
 		}
 
 		WriteConfig << offsetText << std::to_string(valToWrite) << std::endl;
 
-		ReadConfig.open(FileName);
+		ReadConfig.open(FileName.data());
 	}
 
 	void Section(std::string SectionText)
@@ -211,14 +217,6 @@ public:
 				return T();
 			}
 		}
-	}
-
-	//////////////////
-	void ClearFile()
-	{
-		std::ofstream Clear;
-		Clear.open(FileName);
-		Clear.close();
 	}
 };
 
