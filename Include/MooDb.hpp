@@ -21,7 +21,8 @@ private:
 
 	static std::vector <std::string> SplitCSV(std::string str)
 	{
-		std::string built = "";
+		std::string built;
+
 		std::vector <std::string> ret = std::vector <std::string>();
 		bool betweenQuotes = false;
 		for (int i = 0; i < str.length(); i++)
