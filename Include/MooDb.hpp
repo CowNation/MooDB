@@ -40,11 +40,14 @@ private:
 
 public:
 
-	void Insert(std::vector <std::string> data)
+	void Insert(const std::vector <std::string>&& data)
 	{
 		if (data.size() != Columns.size())
-			throw "Inserted data does not match columns";
-		Data.push_back(data);
+		{
+			throw MoonDB::Exception("Inserted data does not match columns");
+		}
+
+		Data.emplace_back(data);
 	}
 
 	void Print()
