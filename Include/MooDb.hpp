@@ -179,14 +179,15 @@ public:
 		}
 
 		std::vector <std::string> Lines = cfg.GetLines();
-		Table ret;
-		for (int i = 0; i < Lines.size(); i++)
+
+		// first line is columns
+		Table ret(SplitCSV(Lines[0]));
+
+		for (int i = 1; i < Lines.size(); i++)
 		{
-			if (i == 0)
-				ret = Table(SplitCSV(Lines[i])); // first line is columns
-			else
-				ret.Data.push_back(SplitCSV(Lines[i]));
+			ret.Data.push_back(SplitCSV(Lines[i]));
 		}
+
 		return ret;
 	}
 
