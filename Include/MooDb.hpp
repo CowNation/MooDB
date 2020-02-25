@@ -179,14 +179,11 @@ public:
 		return ret;
 	}
 
-	Table()
-	{
-	}
+	Table() = default;
 
-	Table(std::vector <std::string> columns)
+	explicit Table(std::vector <std::string>&& columns) : Columns(std::move(columns))
 	{
-		Columns = columns;
-	}
+	};
 
 	std::vector <std::string>* GetRow(int Index)
 	{
