@@ -16,6 +16,24 @@ void PrintVector(std::vector <T> vec)
 }
 
 template <class T>
+void PrintVector(std::vector <std::reference_wrapper <T>> vec)
+{
+	std::string buffer = "\n";
+	buffer.reserve(250);
+
+	for (auto item: vec)
+	{
+		buffer += item.get() + ", ";
+	}
+
+	// Remove the last characters {, }
+	buffer.pop_back();
+	buffer.pop_back();
+
+	std::cout << buffer;
+}
+
+template <class T>
 void PrintVector(std::vector <T*> vec)
 {
 	std::cout << std::endl;
@@ -52,8 +70,10 @@ int main()
 
 	Table tb = Table::Load("Patients.csv");
 	tb.Print();
-	tb.GetColumn("Name").at(1) = "REDACTED";
+
+	tb.GetColumn("Name").at(1).get() = "REDACTED";
 	PrintVector <std::string>(tb.GetColumn("Name"));
+
 	tb.GetRow(0).at(0) = "REDACTED"; // sets the first value in the first row
 	PrintVector(tb.GetRow(0));
 }

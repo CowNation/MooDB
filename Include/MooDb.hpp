@@ -198,18 +198,18 @@ public:
 	std::vector <std::vector <std::string>> GetRowsWithValue(std::string nColumn, std::string ColumnValue)
 	{
 		std::vector <std::vector <std::string>> ret;
-		std::vector <std::string> vColumn = GetColumn(nColumn);
+		std::vector <std::reference_wrapper <std::string>> vColumn = GetColumn(nColumn);
 
 		for (int i = 0; i < vColumn.size(); i++)
 		{
-			if (vColumn[i] == ColumnValue)
+			if (vColumn[i].get() == ColumnValue)
 				ret.push_back(GetRow(i));
 		}
 
 		return ret;
 	} // will return a vector of vectors of strings where that row's column value equals the 'ColumnValue'
 
-	std::vector <std::string> GetColumn(std::string ColumnName)
+	std::vector <std::reference_wrapper <std::string>> GetColumn(std::string ColumnName)
 	{
 		int ColumnIndex = -1;
 		for (int i = 0; i < Columns.size(); i++)
@@ -224,11 +224,11 @@ public:
 		if (ColumnIndex == -1)
 			throw "Could not find column '" + ColumnName + "'";
 
-		std::vector <std::string> ret;
+		std::vector <std::reference_wrapper <std::string>> ret;
 
 		for (auto& i : Data)
 		{
-			ret.push_back(i[ColumnIndex]);
+			ret.emplace_back(i[ColumnIndex]);
 		}
 
 		return ret;
