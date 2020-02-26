@@ -21,13 +21,11 @@
 
 #pragma once
 
-#include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <string_view>
 #include <vector>
-#include <algorithm>
-#include <sstream>
 
 #include "Exception/Exception.hpp"
 
@@ -92,7 +90,7 @@ namespace Moo
 			return buffer;
 		}
 
-		void WriteLine(std::string offsetText, std::string valToWrite)
+		void WriteLine(std::string_view offsetText, std::string_view valToWrite)
 		{
 			if (ReadConfig.is_open())
 				ReadConfig.close(); //Close fstream file before writing to the file
@@ -107,24 +105,6 @@ namespace Moo
 
 			ReadConfig.open(FileName.data());
 		}
-
-		template <class c>
-		void WriteLine(std::string offsetText, c valToWrite)
-		{
-			if (ReadConfig.is_open())
-				ReadConfig.close(); //Close fstream file before writing to the file
-
-			if (FirstLine)
-			{
-				WriteConfig.open(FileName.data());
-				FirstLine = false;
-			}
-
-			WriteConfig << offsetText << std::to_string(valToWrite) << std::endl;
-
-			ReadConfig.open(FileName.data());
-		}
-
 	};
 
 }
