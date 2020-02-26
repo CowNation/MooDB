@@ -4,19 +4,25 @@ using namespace Moo;
 
 std::vector <std::string> Table::SplitCSV(std::string_view str)
 {
-	std::string built;
+	std::string buffer;
 	std::vector <std::string> ret;
 
-	for (char c : str)
+	std::size_t beginData = 0;
+	std::size_t positionComma = str.find(',');
+
+	while (positionComma != std::string::npos)
 	{
-		if (c == ',')
-		{
-			ret.push_back(built);
-			built = "";
-		}
-		else
-			built += c;
+		buffer = str.substr(beginData, positionComma - beginData);
+		ret.emplace_back(buffer);
+		buffer.clear();
+
+		beginData = ++positionComma;
+		positionComma = str.find(',', beginData);
 	}
+
+	buffer = str.substr(beginData);
+	ret.emplace_back(buffer);
+
 	return ret;
 }
 
@@ -108,7 +114,7 @@ void Table::Insert(const std::vector <std::string>&& data)
 
 void Table::Save(const std::string&& fileName)
 {
-	CowConfig cfg(fileName);
+	CowConfig writer(fileName);
 
 	std::string tableColumns;
 
@@ -117,31 +123,50 @@ void Table::Save(const std::string&& fileName)
 		tableColumns += Column + ",";
 	}
 
-	cfg.WriteLine("", tableColumns);
+	// Deleted the last character {,}
+	tableColumns.pop_back();
 
-	for (auto& p : Data)
+	writer.WriteLine("", tableColumns);
+
+	// Store the information content in the row.
+	std::string rowData;
+
+	for (std::vector <std::string>& row : Data)
 	{
-		std::string rowData;
-
-		for (auto& q : p)
+		for (std::string& data : row)
 		{
-			if (q.find(',') != std::string::npos)
-				rowData += "\"" + q + "\",";
+			// Is possible have data with an comma in middle,
+			// example: numbers like 123,456
+			// For avoid break the information need
+			// manage this cases.
+			if (data.find(',') != std::string::npos)
+			{
+				// If the data is of type {123,456} we need
+				// write in the file like: {"123,456"}
+				rowData += "\"" + data + "\",";
+			}
 			else
-				rowData += q + ",";
-		} // looping horizontally
+			{
+				rowData += data + ",";
+			}
+		}
 
-		cfg.WriteLine("", rowData);
-	} // looping vertically
+		// Deleted the last character {,}
+		rowData.pop_back();
+
+		writer.WriteLine("", rowData);
+
+		rowData.clear();
+	}
 }
 
 Table Table::Load(std::string_view fileName)
 {
-	CowConfig cfg;
+	CowConfig loader;
 
 	try
 	{
-		cfg.OpenFile(fileName);
+		loader.OpenFile(fileName);
 	}
 	catch (Moo::Exception& exception)
 	{
@@ -149,7 +174,7 @@ Table Table::Load(std::string_view fileName)
 		std::exit(1);
 	}
 
-	std::vector <std::string> Lines = cfg.GetLines();
+	std::vector <std::string> Lines = loader.GetLines();
 
 	// first line is columns
 	Table ret(SplitCSV(Lines[0]));
