@@ -34,9 +34,9 @@ namespace Moo
 
 		// Construct
 
-		Table() = default;
+		Table() noexcept = default;
 
-		explicit Table(std::vector <std::string>&& columns);
+		explicit Table(std::vector <std::string>&& columns) noexcept;
 
 		// Methods
 

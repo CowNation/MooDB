@@ -208,7 +208,7 @@ std::vector <std::reference_wrapper <std::string>> Table::GetColumn(std::string 
 	return ret;
 }
 
-Table::Table(std::vector <std::string>&& columns) : Columns(std::move(columns))
+Table::Table(std::vector <std::string>&& columns) noexcept : Columns(std::move(columns))
 {
 
 }
@@ -220,5 +220,5 @@ unsigned int Table::GetSize() const noexcept
 
 bool Table::IsEmpty() const noexcept
 {
-	return Data.size() == 0;
+	return Data.empty();
 }
