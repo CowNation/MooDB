@@ -4,26 +4,26 @@ using namespace Moo;
 
 std::vector <std::string> Table::SplitCSV(std::string_view str)
 {
-	std::string buffer;
-	std::vector <std::string> ret;
+	std::string data;
+	std::vector <std::string> buffer;
 
 	std::size_t beginData = 0;
 	std::size_t positionComma = str.find(',');
 
 	while (positionComma != std::string::npos)
 	{
-		buffer = str.substr(beginData, positionComma - beginData);
-		ret.emplace_back(buffer);
-		buffer.clear();
+		data = str.substr(beginData, positionComma - beginData);
+		buffer.emplace_back(data);
+		data.clear();
 
 		beginData = ++positionComma;
 		positionComma = str.find(',', beginData);
 	}
 
-	buffer = str.substr(beginData);
-	ret.emplace_back(buffer);
+	data = str.substr(beginData);
+	buffer.emplace_back(data);
 
-	return ret;
+	return buffer;
 }
 
 void Table::Print()
@@ -181,7 +181,7 @@ Table Table::Load(std::string_view fileName)
 
 	for (int i = 1; i < Lines.size(); i++)
 	{
-		ret.Data.push_back(SplitCSV(Lines[i]));
+		ret.Data.emplace_back(std::move(SplitCSV(Lines[i])));
 	}
 
 	return ret;
