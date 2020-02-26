@@ -148,23 +148,24 @@ namespace Moo
 
 			if (not ReadConfig.is_open())
 			{
-				throw Moo::Exception("FileNotFoundException");
+				throw Exception("FileNotFoundException");
 			}
 		}
 
 
 		std::vector <std::string> GetLines()
 		{
-			std::string str;
-			std::vector <std::string> ret;
-			while (std::getline(ReadConfig, str))
+			std::string data;
+			std::vector <std::string> buffer;
+
+			while (std::getline(ReadConfig, data))
 			{
-				ret.push_back(str);
+				buffer.push_back(data);
 			}
-			return ret;
+
+			return buffer;
 		}
 
-		//////////////////
 		void WriteLine(std::string offsetText, std::string valToWrite)
 		{
 			if (ReadConfig.is_open())

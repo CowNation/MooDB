@@ -165,7 +165,7 @@ void Table::Load(std::string_view fileName)
 	CowConfig loader;
 	loader.OpenFile(fileName);
 
-	std::vector <std::string> Lines = loader.GetLines();
+	std::vector <std::string> Lines = std::move(loader.GetLines());
 
 	// first line is columns
 	this->Columns = std::move(SplitCSV(Lines[0]));
