@@ -52,12 +52,7 @@ public:
 
 	void Print()
 	{
-		std::vector <int> ColumnOffsets;
-
-		for (int i = 0; i < Columns.size(); i++)
-		{
-			ColumnOffsets.push_back(-1);
-		}
+		std::vector <int> ColumnOffsets(Columns.size(), -1);
 
 		for (auto& i : Data)
 		{
