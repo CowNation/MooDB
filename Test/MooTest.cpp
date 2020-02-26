@@ -17,6 +17,8 @@ namespace
 
 		// The table always is empty to be created
 		EXPECT_EQ(tab.GetSize(), 0);
+
+		EXPECT_EQ(tab.IsEmpty(), true);
 	}
 
 	TEST(MooTable, SizeIncrease)

@@ -212,3 +212,13 @@ Table::Table(std::vector <std::string>&& columns) : Columns(std::move(columns))
 {
 
 }
+
+unsigned int Table::GetSize() const noexcept
+{
+	return Data.size();
+}
+
+bool Table::IsEmpty() const noexcept
+{
+	return Data.size() == 0;
+}

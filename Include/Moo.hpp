@@ -26,19 +26,35 @@ namespace Moo
 		 */
 		std::vector <std::vector <std::string> > Data;
 
+		// Static Methods
+
 		static std::vector <std::string> SplitCSV(std::string_view str);
 
 	public:
 
+		// Construct
+
 		Table() = default;
 
 		explicit Table(std::vector <std::string>&& columns);
+
+		// Methods
 
 		void Print();
 
 		void Insert(const std::vector <std::string>&& data);
 
 		void Save(const std::string&& fileName);
+
+		/**
+		 * @return True if the number of registers in the table is zero {0}. Otherwise, false.
+		 */
+		[[nodiscard]] bool IsEmpty() const noexcept;
+
+		/**
+		 * @return The number of registers inserted to table. Zero {0} if is empty.
+		 */
+		[[nodiscard]] unsigned int GetSize() const noexcept;
 
 		static Table Load(std::string_view fileName);
 
@@ -52,14 +68,6 @@ namespace Moo
 		std::vector <std::vector <std::string>> GetRowsWithValue(std::string nColumn, std::string ColumnValue);
 
 		std::vector <std::reference_wrapper <std::string>> GetColumn(std::string ColumnName);
-
-		/**
-		 * @return The number of registers inserted to table. Zero {0} if is empty.
-		 */
-		[[nodiscard]] unsigned int GetSize() const
-		{
-			return Data.size();
-		}
 
 	};
 }
