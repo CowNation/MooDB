@@ -9,7 +9,7 @@
 // Anonymous namespace
 namespace
 {
-	TEST(MooDB, Insert)
+	TEST(MooTable, Insert)
 	{
 		EXPECT_TRUE(true);
 		EXPECT_TRUE(false);

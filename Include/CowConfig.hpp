@@ -46,8 +46,7 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef cppCowConfig
-#define cppCowConfig
+#pragma once
 
 #include <iostream>
 #include <fstream>
@@ -59,170 +58,175 @@
 
 #include "Exception/Exception.hpp"
 
-class CowConfig
+namespace Moo
 {
 
-private:
 
-	std::ofstream WriteConfig;
-	std::fstream ReadConfig;
-	bool FirstLine = true, FirstRead = true;
-	std::string_view FileName;
-	std::vector <std::string> Lines;
-
-	///////////////////
-	void RemoveSubStr(std::string substr, std::string& str)
+	class CowConfig
 	{
-		size_t pos;
 
-		while ((pos = str.find(substr)) != std::string::npos)
+	private:
+
+		std::ofstream WriteConfig;
+		std::fstream ReadConfig;
+		bool FirstLine = true, FirstRead = true;
+		std::string_view FileName;
+		std::vector <std::string> Lines;
+
+		///////////////////
+		void RemoveSubStr(std::string substr, std::string& str)
 		{
-			str.erase(pos, substr.length());
-		}
-	}
+			size_t pos;
 
-	///////////////////
-	void ReadAllLines()
-	{
-		std::string str;
-		while (std::getline(ReadConfig, str))
+			while ((pos = str.find(substr)) != std::string::npos)
+			{
+				str.erase(pos, substr.length());
+			}
+		}
+
+		///////////////////
+		void ReadAllLines()
 		{
-			Lines.push_back(str);
+			std::string str;
+			while (std::getline(ReadConfig, str))
+			{
+				Lines.push_back(str);
+			}
 		}
-	}
 
-	///////////////////
-	int FindElement(std::string Section, std::string offsetText)
-	{
-		Section = "[" + Section + "]";
-		bool SectionFound;
-		for (int i = 0; i < Lines.size(); i++)
+		///////////////////
+		int FindElement(std::string Section, std::string offsetText)
 		{
-			if (Lines[i] == Section || Section == "[]")
-				SectionFound = true;
-			else if (SectionFound && Lines[i].find("[") != std::string::npos && Lines[i].find("]") != std::string::npos)
-				break;
-			if (SectionFound && Lines[i].find(offsetText) != std::string::npos)
-				return i;
+			Section = "[" + Section + "]";
+			bool SectionFound;
+			for (int i = 0; i < Lines.size(); i++)
+			{
+				if (Lines[i] == Section || Section == "[]")
+					SectionFound = true;
+				else if (SectionFound && Lines[i].find("[") != std::string::npos &&
+						 Lines[i].find("]") != std::string::npos)
+					break;
+				if (SectionFound && Lines[i].find(offsetText) != std::string::npos)
+					return i;
+			}
+			return -1;
 		}
-		return -1;
-	}
 
-	///////////////////
-	int pRead(std::string Section, std::string offsetText)
-	{
-		if (FirstRead)
-			ReadAllLines();
-		return FindElement(Section, offsetText);
-	}
+		///////////////////
+		int pRead(std::string Section, std::string offsetText)
+		{
+			if (FirstRead)
+				ReadAllLines();
+			return FindElement(Section, offsetText);
+		}
 
-public:
+	public:
 
-	CowConfig() = default;
+		CowConfig() = default;
 
-	explicit CowConfig(std::string_view fileName) noexcept : FileName(fileName)
-	{
+		explicit CowConfig(std::string_view fileName) noexcept : FileName(fileName)
+		{
 
+		};
+
+		~CowConfig()
+		{
+			if (ReadConfig.is_open())
+				ReadConfig.close();
+			if (WriteConfig.is_open())
+				WriteConfig.close();
+		}
+
+		/**
+		 * Will open file with specified filename and will return whether the file is open
+		 * @param fileName Filename
+		 * @return True if the file is open, otherwise false.
+		 */
+		void OpenFile(std::string_view fileName)
+		{
+			ReadConfig.open(fileName.data());
+
+			if (not ReadConfig.is_open())
+			{
+				throw Moo::Exception("FileNotFoundException");
+			}
+		}
+
+
+		std::vector <std::string> GetLines()
+		{
+			std::string str;
+			std::vector <std::string> ret;
+			while (std::getline(ReadConfig, str))
+			{
+				ret.push_back(str);
+			}
+			return ret;
+		}
+
+		//////////////////
+		void WriteLine(std::string offsetText, std::string valToWrite)
+		{
+			if (ReadConfig.is_open())
+				ReadConfig.close(); //Close fstream file before writing to the file
+
+			if (FirstLine)
+			{
+				WriteConfig.open(FileName.data());
+				FirstLine = false;
+			}
+
+			WriteConfig << offsetText << valToWrite << std::endl;
+
+			ReadConfig.open(FileName.data());
+		}
+
+		template <class c>
+		void WriteLine(std::string offsetText, c valToWrite)
+		{
+			if (ReadConfig.is_open())
+				ReadConfig.close(); //Close fstream file before writing to the file
+
+			if (FirstLine)
+			{
+				WriteConfig.open(FileName.data());
+				FirstLine = false;
+			}
+
+			WriteConfig << offsetText << std::to_string(valToWrite) << std::endl;
+
+			ReadConfig.open(FileName.data());
+		}
+
+		void Section(std::string SectionText)
+		{
+			SectionText = "[" + SectionText + "]";
+			WriteLine("", SectionText);
+		}
+
+		//////////////////
+		template <class T>
+		T Read(std::string Section, std::string offsetText)
+		{
+			int _Read = pRead(Section, offsetText);
+			if (_Read == -1)
+				return 0;
+			else
+			{
+				try
+				{
+					std::string temp = Lines[_Read];
+					RemoveSubStr(offsetText, temp);
+					T ret;
+					std::istringstream(temp) >> ret;
+					return ret;
+				}
+				catch (...)
+				{
+					return T();
+				}
+			}
+		}
 	};
 
-	~CowConfig()
-	{
-		if (ReadConfig.is_open())
-			ReadConfig.close();
-		if (WriteConfig.is_open())
-			WriteConfig.close();
-	}
-
-	/**
-	 * Will open file with specified filename and will return whether the file is open
-	 * @param fileName Filename
-	 * @return True if the file is open, otherwise false.
-	 */
-	void OpenFile(std::string_view fileName)
-	{
-		ReadConfig.open(fileName.data());
-
-		if (not ReadConfig.is_open())
-		{
-			throw MoonDB::Exception("FileNotFoundException");
-		}
-	}
-
-
-	std::vector <std::string> GetLines()
-	{
-		std::string str;
-		std::vector <std::string> ret;
-		while (std::getline(ReadConfig, str))
-		{
-			ret.push_back(str);
-		}
-		return ret;
-	}
-
-	//////////////////
-	void WriteLine(std::string offsetText, std::string valToWrite)
-	{
-		if (ReadConfig.is_open())
-			ReadConfig.close(); //Close fstream file before writing to the file
-
-		if (FirstLine)
-		{
-			WriteConfig.open(FileName.data());
-			FirstLine = false;
-		}
-
-		WriteConfig << offsetText << valToWrite << std::endl;
-
-		ReadConfig.open(FileName.data());
-	}
-
-	template <class c>
-	void WriteLine(std::string offsetText, c valToWrite)
-	{
-		if (ReadConfig.is_open())
-			ReadConfig.close(); //Close fstream file before writing to the file
-
-		if (FirstLine)
-		{
-			WriteConfig.open(FileName.data());
-			FirstLine = false;
-		}
-
-		WriteConfig << offsetText << std::to_string(valToWrite) << std::endl;
-
-		ReadConfig.open(FileName.data());
-	}
-
-	void Section(std::string SectionText)
-	{
-		SectionText = "[" + SectionText + "]";
-		WriteLine("", SectionText);
-	}
-
-	//////////////////
-	template <class T>
-	T Read(std::string Section, std::string offsetText)
-	{
-		int _Read = pRead(Section, offsetText);
-		if (_Read == -1)
-			return 0;
-		else
-		{
-			try
-			{
-				std::string temp = Lines[_Read];
-				RemoveSubStr(offsetText, temp);
-				T ret;
-				std::istringstream(temp) >> ret;
-				return ret;
-			}
-			catch (...)
-			{
-				return T();
-			}
-		}
-	}
-};
-
-#endif
+}

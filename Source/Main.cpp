@@ -1,7 +1,10 @@
 #include <iostream>
 #include <vector>
 #include <string>
+
 #include "MooDb.hpp"
+
+using namespace Moo;
 
 template <class T>
 void PrintVector(std::vector <T> vec)

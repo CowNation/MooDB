@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 
-namespace MoonDB
+namespace Moo
 {
 	class Exception : std::exception
 	{
