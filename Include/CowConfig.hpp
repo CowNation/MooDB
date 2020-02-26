@@ -42,7 +42,6 @@ namespace Moo
 		std::fstream ReadConfig;
 		bool FirstLine = true;
 		std::string_view FileName;
-		std::vector <std::string> Lines;
 
 	public:
 
