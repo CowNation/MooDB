@@ -11,7 +11,7 @@ SET(CMAKE_CXX_EXTENSIONS OFF)
 
 INCLUDE_DIRECTORIES(Include)
 
-ADD_EXECUTABLE(MoonDB Source/Main.cpp Include/Exception/Exception.hpp)
+ADD_EXECUTABLE(MoonDB Source/Main.cpp Include/Exception/Exception.hpp Source/Moo.cpp)
 
 # Find and link the library gtest for purpose of test
 INCLUDE_DIRECTORIES(Library/GoogleTest)

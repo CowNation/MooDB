@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 
-#include "MooDb.hpp"
+#include "Moo.hpp"
 
 using namespace Moo;
 

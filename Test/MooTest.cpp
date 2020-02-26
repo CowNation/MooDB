@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 
-#include "MooDb.hpp"
+#include "Moo.hpp"
 
 using namespace Moo;
 
@@ -16,7 +16,7 @@ namespace
 		Table tab({ "Name", "Gender", "Age", "DOB", "Height", "Weight" });
 
 		// The table always is empty to be created
-		EXPECT_EQ(tab.SizeInRows(), 0);
+		EXPECT_EQ(tab.GetSize(), 0);
 	}
 
 	TEST(MooTable, SizeIncrease)
@@ -24,10 +24,10 @@ namespace
 		Table tab({ "Name", "Gender", "Age", "DOB", "Height", "Weight" });
 
 		tab.Insert({ "Funanya Radomir", "Female", "3", "6/1/2015", "3 ft 1 in", "29.5 lbs" });
-		EXPECT_EQ(tab.SizeInRows(), 1);
+		EXPECT_EQ(tab.GetSize(), 1);
 
 		tab.Insert({ "Reanna Shekhar", "Female", "15", "10/31/2003", "5 ft 6 in", "130 lbs" });
-		EXPECT_EQ(tab.SizeInRows(), 2);
+		EXPECT_EQ(tab.GetSize(), 2);
 	}
 }
 
