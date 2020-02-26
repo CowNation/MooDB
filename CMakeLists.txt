@@ -7,7 +7,7 @@ SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 SET(CMAKE_CXX_EXTENSIONS OFF)
 
 # Support to Code Coverage with gcov in gcc
-SET(CMAKE_CXX_FLAGS "--coverage")
+#SET(CMAKE_CXX_FLAGS "--coverage")
 
 INCLUDE_DIRECTORIES(Include)
 
