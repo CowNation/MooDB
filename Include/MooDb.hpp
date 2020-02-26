@@ -239,5 +239,11 @@ namespace Moo
 
 			return ret;
 		}
+
+		[[nodiscard]] unsigned int SizeInRows() const
+		{
+			return Data.size();
+		}
+
 	};
 }

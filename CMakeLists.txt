@@ -21,10 +21,10 @@ LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/Library/GoogleTest)
 
 ADD_DEFINITIONS(-DGTEST_HAS_PTHREAD=1)
 
-ADD_EXECUTABLE(MooDB.Test Test/MooDBTest.cpp)
-TARGET_LINK_LIBRARIES(MooDB.Test PUBLIC GoogleTestMain)
-TARGET_LINK_LIBRARIES(MooDB.Test PUBLIC GoogleTest)
+ADD_EXECUTABLE(Moo.Test Test/MooTest.cpp)
+TARGET_LINK_LIBRARIES(Moo.Test PUBLIC GoogleTestMain)
+TARGET_LINK_LIBRARIES(Moo.Test PUBLIC GoogleTest)
 # Is very important that this line will be putted after of link GoogleTest {gtest}
-TARGET_LINK_LIBRARIES(MooDB.Test PUBLIC pthread)
+TARGET_LINK_LIBRARIES(Moo.Test PUBLIC pthread)
 
-ADD_TEST(MooDBAllTest MooDB.Test)
+ADD_TEST(MooTestTable Moo.Test)
