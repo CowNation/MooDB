@@ -160,31 +160,20 @@ void Table::Save(const std::string&& fileName)
 	}
 }
 
-Table Table::Load(std::string_view fileName)
+void Table::Load(std::string_view fileName)
 {
 	CowConfig loader;
-
-	try
-	{
-		loader.OpenFile(fileName);
-	}
-	catch (Moo::Exception& exception)
-	{
-		exception.PrintMessage();
-		std::exit(1);
-	}
+	loader.OpenFile(fileName);
 
 	std::vector <std::string> Lines = loader.GetLines();
 
 	// first line is columns
-	Table ret(SplitCSV(Lines[0]));
+	this->Columns = std::move(SplitCSV(Lines[0]));
 
 	for (int i = 1; i < Lines.size(); i++)
 	{
-		ret.Data.emplace_back(std::move(SplitCSV(Lines[i])));
+		this->Data.emplace_back(std::move(SplitCSV(Lines[i])));
 	}
-
-	return ret;
 }
 
 std::vector <std::string>& Table::GetRow(int Index)

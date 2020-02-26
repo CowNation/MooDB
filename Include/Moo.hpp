@@ -56,7 +56,7 @@ namespace Moo
 		 */
 		[[nodiscard]] unsigned int GetSize() const noexcept;
 
-		static Table Load(std::string_view fileName);
+		void Load(std::string_view fileName);
 
 		std::vector <std::string>& GetRow(int Index);
 

@@ -71,7 +71,18 @@ int main()
 		std::cout << std::endl;
 	}
 
-	Table tb = Table::Load("Patients.csv");
+	Table tb;
+
+	try
+	{
+		tb.Load("Patients.csv");
+	}
+	catch (Exception& exception)
+	{
+		exception.PrintMessage();
+		std::exit(1);
+	}
+
 	tb.Print();
 
 	tb.GetColumn("Name").at(1).get() = "REDACTED";
