@@ -22,7 +22,6 @@
 #pragma once
 
 #include <fstream>
-#include <sstream>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -39,7 +38,7 @@ namespace Moo
 	private:
 
 		std::ofstream WriteConfig;
-		std::fstream ReadConfig;
+		std::ifstream ReadConfig;
 		bool FirstLine = true;
 		std::string_view FileName;
 
