@@ -183,10 +183,10 @@ std::vector <std::string>& Table::GetRow(int Index)
 	return Data[Index];
 }
 
-std::vector <std::vector <std::string>> Table::GetRowsWithValue(std::string nColumn, std::string ColumnValue)
+std::vector <std::vector <std::string>> Table::GetRowsWithValue(std::string&& nColumn, std::string ColumnValue)
 {
 	std::vector <std::vector <std::string>> ret;
-	std::vector <std::reference_wrapper <std::string>> vColumn = GetColumn(nColumn);
+	std::vector <std::reference_wrapper <std::string>> vColumn = GetColumn(std::move(nColumn));
 
 	for (int i = 0; i < vColumn.size(); i++)
 	{
@@ -197,7 +197,7 @@ std::vector <std::vector <std::string>> Table::GetRowsWithValue(std::string nCol
 	return ret;
 }
 
-std::vector <std::reference_wrapper <std::string>> Table::GetColumn(std::string ColumnName)
+std::vector <std::reference_wrapper <std::string>> Table::GetColumn(std::string&& ColumnName)
 {
 	int ColumnIndex = -1;
 	for (int i = 0; i < Columns.size(); i++)
@@ -210,7 +210,10 @@ std::vector <std::reference_wrapper <std::string>> Table::GetColumn(std::string 
 	}
 
 	if (ColumnIndex == -1)
-		throw "Could not find column '" + ColumnName + "'";
+	{
+		std::string message = "Could not find column '" + ColumnName + "'";
+		throw Exception(std::move(message));
+	}
 
 	std::vector <std::reference_wrapper <std::string>> ret;
 

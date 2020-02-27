@@ -65,9 +65,9 @@ namespace Moo
 		 * @param ColumnValue Filter, if the value of column is equal to it, this row will be returned
 		 * @return A vector of vectors of strings where that row's column value equals the 'ColumnValue'
 		 */
-		std::vector <std::vector <std::string>> GetRowsWithValue(std::string nColumn, std::string ColumnValue);
+		std::vector <std::vector <std::string>> GetRowsWithValue(std::string&& nColumn, std::string ColumnValue);
 
-		std::vector <std::reference_wrapper <std::string>> GetColumn(std::string ColumnName);
+		std::vector <std::reference_wrapper <std::string>> GetColumn(std::string&& ColumnName);
 
 	};
 }

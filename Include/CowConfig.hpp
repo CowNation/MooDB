@@ -72,7 +72,7 @@ namespace Moo
 			{
 				std::string message = "The file \'";
 				message += fileName.data();
-				message += "\' can't found.";
+				message += "\' couldn't find.";
 
 				throw Exception(std::move(message));
 			}
