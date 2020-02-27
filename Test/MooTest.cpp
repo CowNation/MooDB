@@ -74,10 +74,12 @@ namespace
 		EXPECT_TRUE(RegisterIsInsertedWithoutAlteration(registerInserted, tab.GetRow(0)));
 	}
 
-	TEST(MooTable, MethodLoadThrowException)
+	TEST(MooTable, ThrowException)
 	{
 		Table tab;
 
+		ASSERT_ANY_THROW(tab.GetRow(42));
+		ASSERT_ANY_THROW(tab.GetColumn("ThisColumnNotExist"));
 		ASSERT_ANY_THROW(tab.Load("ThisFileNotExist.csv"));
 	}
 }
