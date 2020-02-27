@@ -11,6 +11,30 @@ using namespace Moo;
 // Anonymous namespace
 namespace
 {
+	using Register = std::vector <std::string>;
+
+	testing::AssertionResult RegisterIsInsertedWithoutAlteration(
+			const Register& registerInserted, const Register& registerOfRow)
+	{
+		if (registerInserted.size() not_eq registerOfRow.size())
+		{
+			return testing::AssertionFailure() << "The size of both register is different.";
+		}
+
+		for (int i = 0; i < registerInserted.size(); ++i)
+		{
+			if (registerInserted[i] not_eq registerOfRow[i])
+			{
+				return testing::AssertionFailure() << "The register not are equals. "
+												   << "The value expected is: \'" << registerInserted[i]
+												   << "\' but instead is: "
+												   << '\'' << registerOfRow[i] << '\'';
+			}
+		}
+
+		return testing::AssertionSuccess();
+	}
+
 	TEST(MooTable, Empty)
 	{
 		Table tab({ "Name", "Gender", "Age", "DOB", "Height", "Weight" });
@@ -30,6 +54,16 @@ namespace
 
 		tab.Insert({ "Reanna Shekhar", "Female", "15", "10/31/2003", "5 ft 6 in", "130 lbs" });
 		EXPECT_EQ(tab.GetSize(), 2);
+	}
+
+	TEST(MooTable, Insert)
+	{
+		const Register registerInserted = { "Funanya Radomir", "Female", "3", "6/1/2015", "3 ft 1 in", "29.5 lbs" };
+
+		Table tab({ "Name", "Gender", "Age", "DOB", "Height", "Weight" });
+		tab.Insert({ "Funanya Radomir", "Female", "3", "6/1/2015", "3 ft 1 in", "29.5 lbs" });
+
+		EXPECT_TRUE(RegisterIsInsertedWithoutAlteration(registerInserted, tab.GetRow(0)));
 	}
 
 	TEST(MooTable, MethodLoadThrowException)
