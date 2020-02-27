@@ -23,7 +23,7 @@ namespace Moo
 		 *
 		 * @param _message Message informative about of the exception.
 		 */
-		explicit Exception(std::string&& _message) : message(_message)
+		explicit Exception(std::string&& _message) : message(std::move(_message))
 		{
 		};
 
