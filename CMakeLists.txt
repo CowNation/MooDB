@@ -11,7 +11,10 @@ SET(CMAKE_CXX_EXTENSIONS OFF)
 
 INCLUDE_DIRECTORIES(Include)
 
-ADD_EXECUTABLE(MoonDB Source/Main.cpp Include/Exception/Exception.hpp Source/Moo.cpp)
+ADD_LIBRARY(Moo Source/Moo.cpp)
+
+ADD_EXECUTABLE(ExecutableMoo Source/Main.cpp)
+TARGET_LINK_LIBRARIES(ExecutableMoo PRIVATE Moo)
 
 # Find and link the library gtest for purpose of test
 INCLUDE_DIRECTORIES(Library/GoogleTest)
@@ -22,6 +25,7 @@ LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/Library/GoogleTest)
 ADD_DEFINITIONS(-DGTEST_HAS_PTHREAD=1)
 
 ADD_EXECUTABLE(Moo.Test Test/MooTest.cpp)
+TARGET_LINK_LIBRARIES(Moo.Test PUBLIC Moo)
 TARGET_LINK_LIBRARIES(Moo.Test PUBLIC GoogleTestMain)
 TARGET_LINK_LIBRARIES(Moo.Test PUBLIC GoogleTest)
 # Is very important that this line will be putted after of link GoogleTest {gtest}

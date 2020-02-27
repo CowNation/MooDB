@@ -31,6 +31,13 @@ namespace
 		tab.Insert({ "Reanna Shekhar", "Female", "15", "10/31/2003", "5 ft 6 in", "130 lbs" });
 		EXPECT_EQ(tab.GetSize(), 2);
 	}
+
+	TEST(MooTable, MethodLoadThrowException)
+	{
+		Table tab;
+
+		ASSERT_ANY_THROW(tab.Load("ThisFileNotExist.csv"));
+	}
 }
 
 int main()
