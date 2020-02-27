@@ -16,13 +16,20 @@ namespace
 	testing::AssertionResult RegisterIsInsertedWithoutAlteration(
 			const Register& registerInserted, const Register& registerOfRow)
 	{
+		// If both register have size different mean that
+		// have values different and such so the register
+		// was altered during the insertion to table.
 		if (registerInserted.size() not_eq registerOfRow.size())
 		{
 			return testing::AssertionFailure() << "The size of both register is different.";
 		}
 
+		// Compare each value of both registers
 		for (int i = 0; i < registerInserted.size(); ++i)
 		{
+			// If the values of register are different mean
+			// that a value's register was altered during the
+			// insertion to table.
 			if (registerInserted[i] not_eq registerOfRow[i])
 			{
 				return testing::AssertionFailure() << "The register not are equals. "
