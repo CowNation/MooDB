@@ -15,7 +15,15 @@ namespace Moo
 
 	public:
 
-		explicit Exception(const std::string&& _message) : message(_message)
+		/**
+		 * Is important remember that the construct accept for parameters
+		 * a string temporal, this mean that the string after of will be
+		 * passed for parameters not will be valid, if you intent use this
+		 * string you probably get a error in runtime.
+		 *
+		 * @param _message Message informative about of the exception.
+		 */
+		explicit Exception(std::string&& _message) : message(_message)
 		{
 		};
 

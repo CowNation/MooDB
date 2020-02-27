@@ -26,7 +26,8 @@ namespace
 			if (registerInserted[i] not_eq registerOfRow[i])
 			{
 				return testing::AssertionFailure() << "The register not are equals. "
-												   << "The value expected is: \'" << registerInserted[i]
+												   << "The value expected is: \'"
+												   << registerInserted[i]
 												   << "\' but instead is: "
 												   << '\'' << registerOfRow[i] << '\'';
 			}

@@ -106,7 +106,7 @@ void Table::Insert(const std::vector <std::string>&& data)
 {
 	if (data.size() != Columns.size())
 	{
-		throw Moo::Exception("Inserted data does not match columns");
+		throw Exception("Inserted data does not match columns");
 	}
 
 	Data.emplace_back(data);

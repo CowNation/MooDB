@@ -70,7 +70,11 @@ namespace Moo
 
 			if (not ReadConfig.is_open())
 			{
-				throw Exception("FileNotFoundException");
+				std::string message = "The file \'";
+				message += fileName.data();
+				message += "\' can't found.";
+
+				throw Exception(std::move(message));
 			}
 		}
 
